@@ -2,6 +2,8 @@
 
 namespace App\Http\Middleware;
 
+
+use Auth;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +17,11 @@ class Admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        return $next($request);
+        if (Auth::check() && Auth::user()->usertype === 'admin') {
+            return $next($request);
+        }
+
+        // If the user is not an admin, redirect to a different page
+        return redirect('/')->with('error', 'You do not have admin access');
     }
 }

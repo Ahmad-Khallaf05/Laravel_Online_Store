@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -17,11 +19,21 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/admin', function () {
+    return view('dashboard');
+})->middleware(['auth','admin']);
+
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::get('/admin', function () {
-    return view('admin');
-})->middleware(['auth','admin']);
+
+// -----------------------------------------------------------------------------------------
+
+
+Route::resource('products', ProductController::class);
+Route::resource('categories', CategoryController::class);
+
+Route::get('products/by-category', [ProductController::class, 'byCategory'])->name('products.byCategory');
+
 
